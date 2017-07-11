@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1033708388505",
+    "firebase_url": "https://uccarpooling.firebaseio.com",
+    "project_id": "uccarpooling",
+    "storage_bucket": "uccarpooling.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033708388505:android:dbc4c7e3cd6db654",
+        "android_client_info": {
+          "package_name": "softwareengineering.uc_carpooling"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033708388505-jb7gdi21s7bograin4rcmgcels08t9ej.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "softwareengineering.uc_carpooling",
+            "certificate_hash": "7cca53fb1d8a8ead1e2dfd468204fb1dc2baa7f3"
+          }
+        },
+        {
+          "client_id": "1033708388505-osr4tivcm0mb9dgd848u3gl2qb49ceum.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoxfEWBuxwIbCmhLywGb3hWOsLq2A_Z-g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033708388505-osr4tivcm0mb9dgd848u3gl2qb49ceum.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
