@@ -23,7 +23,8 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
-        <activity android:name=".MainMenuActivity"></activity>
+        <activity android:name=".MainMenuActivity" />
+        <activity android:name=".activity_account_creation"></activity>
     </application>
 
 </manifest>
