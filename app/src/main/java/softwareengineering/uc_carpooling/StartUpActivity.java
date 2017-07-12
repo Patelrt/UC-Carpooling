@@ -14,11 +14,22 @@ public class StartUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start_up);
 
         Button loginButton = (Button) findViewById(R.id.log_in);
+        Button signUpButton = (Button) findViewById(R.id.sign_up);
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = LoginActivity.createIntent(StartUpActivity.this);
                 startActivity(intent);
+            }
+        });
+
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = activity_account_creation.createIntent(StartUpActivity.this);
+                startActivity(intent);
+
             }
         });
 
