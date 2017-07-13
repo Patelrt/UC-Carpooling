@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      *  Keep track of the login task to ensure we can cancel it if requested.
      */
     private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
 
     // UI references.
@@ -100,6 +101,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        mAuth = FirebaseAuth.getInstance();
+
+
     }
 
     private void populateAutoComplete() {
