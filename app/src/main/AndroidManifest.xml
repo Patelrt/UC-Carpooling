@@ -24,7 +24,10 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity android:name=".MainMenuActivity" />
-        <activity android:name=".activity_account_creation"></activity>
+        <activity android:name=".activity_account_creation" />
+        <activity android:name=".EditUserProfile" />
+        <activity android:name=".UserProfile" />
+        <activity android:name=".LoginBasic"></activity>
     </application>
 
 </manifest>
