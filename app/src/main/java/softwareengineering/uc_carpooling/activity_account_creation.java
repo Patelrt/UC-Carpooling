@@ -1,8 +1,12 @@
 package softwareengineering.uc_carpooling;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.nfc.Tag;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -110,7 +114,7 @@ public class activity_account_creation extends AppCompatActivity {
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return email.contains("@mail.uc.edu");
     }
 
     private boolean isPasswordValid(String password) {
@@ -126,9 +130,13 @@ public class activity_account_creation extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
+                            Toast.makeText(activity_account_creation.this, "Authentication success.",
+                                    Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             sendVerificationEmail(user); // sends an email to a new user to verify their email address
                             //updateUI(user);
+                            Intent intent = LoginActivity.createIntent(activity_account_creation.this);
+                            startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -154,6 +162,9 @@ public class activity_account_creation extends AppCompatActivity {
                     }
                 });
     }
+
+
+
 
 
 }
