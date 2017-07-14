@@ -13,17 +13,17 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        /*
-        Button profileButton = (Button) findViewById(R.id.buttonRequestRide);
+
+        Button profileButton = (Button) findViewById(R.id.buttonProfile);
 
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = .createIntent(MainMenuActivity.this);
+                Intent intent = UserProfile.createIntent(MainMenuActivity.this);
                 startActivity(intent);
             }
         });
-        */
+
     }
 
     public static Intent createIntent(Context context) {
