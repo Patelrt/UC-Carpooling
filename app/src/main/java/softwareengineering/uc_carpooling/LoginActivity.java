@@ -68,6 +68,11 @@ public class LoginActivity extends AppCompatActivity {
             focusView = inputPassword;
             cancel = true;
         }
+        if (TextUtils.isEmpty(password)) {
+            inputPassword.setError(getString(R.string.error_field_required));
+            focusView = inputPassword;
+            cancel = true;
+        }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
@@ -79,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
             focusView = inputEmail;
             cancel = true;
         }
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -102,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            Toast.makeText(LoginActivity.this, "Logging in.",
+                            Toast.makeText(LoginActivity.this, "Login success.",
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent intent = MainMenuActivity.createIntent(LoginActivity.this);
