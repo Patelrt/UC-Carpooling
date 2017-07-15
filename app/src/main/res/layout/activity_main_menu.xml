@@ -22,8 +22,8 @@
 
     <Button
         android:id="@+id/offer_a_ride"
-        android:layout_width="155dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Offer A Ride"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -52,8 +52,8 @@
 
     <Button
         android:id="@+id/buttonProfile"
-        android:layout_width="157dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Profile"
         tools:layout_editor_absoluteY="332dp"
         android:layout_marginRight="8dp"
