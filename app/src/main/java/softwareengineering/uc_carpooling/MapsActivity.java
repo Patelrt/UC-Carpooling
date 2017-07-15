@@ -26,10 +26,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,14 +36,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
+
         // Do other setup activities here too, as described elsewhere in this tutorial.
 
         // Build the Play services client for use by the Fused Location Provider and the Places API.
         // Use the addApi() method to request the Google Places API and the Fused Location Provider.
-
-
     }
-
 
     public static Intent createIntent(Context context) {
         return new Intent(context, MapsActivity.class);
@@ -69,7 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
@@ -81,11 +75,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double longitude = location.getLongitude();
         double latitude = location.getLatitude();
 
-        // Add a marker in Sydney and move the camera
+        // Add a marker at users location
         LatLng rideRequestLocation = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(rideRequestLocation).title("Marker in Sydney"));
+        MarkerOptions marker = new MarkerOptions();
+        mMap.addMarker(marker.position(rideRequestLocation).title("Ride Request Marker"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(rideRequestLocation));
+        double markerLatitude = marker.getPosition().latitude;
+        double markerLongitude = marker.getPosition().longitude; //TODO put these into database
+
+
+
+
+
     }
+
+
+
 
 
 }
