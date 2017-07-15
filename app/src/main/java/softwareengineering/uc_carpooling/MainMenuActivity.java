@@ -15,11 +15,21 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         Button profileButton = (Button) findViewById(R.id.buttonProfile);
+        Button rideRequestButton = (Button) findViewById(R.id.buttonRequestRide);
 
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = UserProfile.createIntent(MainMenuActivity.this);
+                startActivity(intent);
+            }
+        });
+
+        rideRequestButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = MapsActivity.createIntent(MainMenuActivity.this);
                 startActivity(intent);
             }
         });
