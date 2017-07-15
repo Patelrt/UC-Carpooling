@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="softwareengineering.uc_carpooling.UserProfile">
+
+    <TextView
+        android:id="@+id/textView_Name"
+        android:layout_width="289dp"
+        android:layout_height="24dp"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="95dp"
+        tools:layout_editor_absoluteY="143dp"
+        tools:text="Name" />
+
+    <TextView
+        android:id="@+id/textView_userName"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="189dp"
+        tools:text="Username" />
+
+    <TextView
+        android:id="@+id/textView_ItJustSaysProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:textSize="30sp"
+        tools:layout_editor_absoluteX="149dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/textView_userEmail"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="241dp"
+        tools:text="Email" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name" />
+
+</android.support.constraint.ConstraintLayout>
