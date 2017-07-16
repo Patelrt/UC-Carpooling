@@ -95,6 +95,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MarkerOptions markerOp = new MarkerOptions().position(rideRequestLocation).title("Ride Request Marker");
         mMap.addMarker(markerOp);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(rideRequestLocation));
+        mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
 
         double markerLatitude = markerOp.getPosition().latitude;
         double markerLongitude = markerOp.getPosition().longitude; //TODO put these into database
