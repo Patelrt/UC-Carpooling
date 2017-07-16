@@ -1,30 +1,45 @@
 package softwareengineering.uc_carpooling;
 
-import android.*;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
-
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LocationListener{
 
     private GoogleMap mMap;
+    private LocationRequest locationRequest;
+    private GoogleApiClient client;
+
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,21 +50,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        client = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
 
 
-        // Do other setup activities here too, as described elsewhere in this tutorial.
-
-        // Build the Play services client for use by the Fused Location Provider and the Places API.
-        // Use the addApi() method to request the Google Places API and the Fused Location Provider.
     }
 
     public static Intent createIntent(Context context) {
         return new Intent(context, MapsActivity.class);
     }
-
-
-
-
 
     /**
      * Manipulates the map once available.
@@ -64,33 +76,108 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+        // Create the LocationRequest object
+        locationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)
+                .setFastestInterval(1000);
+
+    }
+
+    private void handleNewLocation(Location location) {
+        Log.d("New Location", location.toString());
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+
+        LatLng rideRequestLocation = new LatLng(latitude, longitude);
+
+        MarkerOptions markerOp = new MarkerOptions().position(rideRequestLocation).title("Ride Request Marker");
+        mMap.addMarker(markerOp);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(rideRequestLocation));
+
+        double markerLatitude = markerOp.getPosition().latitude;
+        double markerLongitude = markerOp.getPosition().longitude; //TODO put these into database
+
+    }
+
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
             // Show rationale and request permission.
         }
-        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
+        Location location = LocationServices.FusedLocationApi.getLastLocation(client);
+        if (location == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(client,
+                    locationRequest, (com.google.android.gms.location.LocationListener) this);
+        }
+        else {
+            handleNewLocation(location);
+        }
 
-        // Add a marker at users location
-        LatLng rideRequestLocation = new LatLng(latitude, longitude);
-        MarkerOptions marker = new MarkerOptions();
-        mMap.addMarker(marker.position(rideRequestLocation).title("Ride Request Marker"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(rideRequestLocation));
-        double markerLatitude = marker.getPosition().latitude;
-        double markerLongitude = marker.getPosition().longitude; //TODO put these into database
+    }
 
+    @Override
+    public void onConnectionSuspended(int i) {
 
+    }
 
-
-
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+            } catch (IntentSender.SendIntentException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.i("Connection Failed", "Location services connection failed with code " + connectionResult.getErrorCode());
+        }
     }
 
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        client.connect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (client.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(client,
+                    (com.google.android.gms.location.LocationListener) this);
+            client.disconnect();
+        }
+    }
 
 
+    @Override
+    public void onLocationChanged(Location location) {
+        handleNewLocation(location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }
