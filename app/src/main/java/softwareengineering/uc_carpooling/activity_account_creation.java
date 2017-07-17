@@ -129,7 +129,7 @@ public class activity_account_creation extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             sendVerificationEmail(user); // sends an email to a new user to verify their email address
                             User appUser = new User(user.getEmail(), inputName.getText().toString());
-                            mDatabase.child("users").child("user").setValue(appUser);
+                            mDatabase.child("users").child(user.getUid()).setValue(appUser);
                             Intent intent = LoginActivity.createIntent(activity_account_creation.this);
                             startActivity(intent);
                         } else {
