@@ -23,12 +23,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class activity_account_creation extends AppCompatActivity {
 
     private EditText inputPassword;
     private EditText inputName;
     private EditText inputEmail;
+    private DatabaseReference mDatabase;
 
     private FirebaseAuth mAuth;
     private static final String TAG = "AccountCreation";
@@ -53,20 +56,14 @@ public class activity_account_creation extends AppCompatActivity {
             }
         });
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
     }
 
     public static Intent createIntent(Context context) {
         return new Intent(context, activity_account_creation.class);
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-    }
-
 
 
     private void createAccount() {
@@ -103,11 +100,8 @@ public class activity_account_creation extends AppCompatActivity {
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.(true);
             signUp(email, password);
-            //mAuthTask = new UserLoginTask(email, password);
-            //mAuthTask.execute((Void) null);
+
         }
 
     }
@@ -134,7 +128,8 @@ public class activity_account_creation extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             sendVerificationEmail(user); // sends an email to a new user to verify their email address
-                            //updateUI(user);
+                            User appUser = new User(user.getEmail(), inputName.getText().toString());
+                            mDatabase.child("users").child("user").setValue(appUser);
                             Intent intent = LoginActivity.createIntent(activity_account_creation.this);
                             startActivity(intent);
                         } else {
