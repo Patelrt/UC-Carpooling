@@ -32,6 +32,7 @@ public class RequestRide extends AppCompatActivity {
             public void onClick(View v) {
                 date = inputDate.getText().toString();
                 destination = inputDestination.getText().toString();
+                OfferRide.offeredRide = false;
                 Intent intent = MapsActivity.createIntent(RequestRide.this);
                 startActivity(intent);
             }

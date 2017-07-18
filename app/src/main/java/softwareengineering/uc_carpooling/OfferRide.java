@@ -15,6 +15,7 @@ public class OfferRide extends AppCompatActivity {
 
     public static String date;
     public static String destination;
+    public static boolean offeredRide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class OfferRide extends AppCompatActivity {
                 date = inputDate.getText().toString();
                 destination = inputDestination.getText().toString();
                 Intent intent = MapsActivity.createIntent(OfferRide.this);
+                offeredRide = true;
                 startActivity(intent);
             }
         });

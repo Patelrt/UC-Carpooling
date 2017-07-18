@@ -119,6 +119,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
 
+
+
         LatLng rideRequestLocation = new LatLng(latitude, longitude);
 
         MarkerOptions markerOp = new MarkerOptions().position(rideRequestLocation).title("Ride Request Marker").
@@ -222,7 +224,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     locationRequest, (com.google.android.gms.location.LocationListener) this);
         }
         else {
-            handleNewLocation(location);
+
+            if (!OfferRide.offeredRide) {
+                handleNewLocation(location);
+            }
+
+
+
         }
 
     }
