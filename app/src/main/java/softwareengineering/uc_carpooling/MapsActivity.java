@@ -148,7 +148,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 LatLng newLocation = new LatLng(latitude, longitude);
                 MarkerOptions newMarker = new MarkerOptions().position(newLocation).snippet(userSnippet);
-                mMap.addMarker(newMarker);
+                Marker marker = mMap.addMarker(newMarker);
+                marker.showInfoWindow();
+
             }
 
             @Override
