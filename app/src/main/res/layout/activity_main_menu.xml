@@ -10,31 +10,32 @@
         android:id="@+id/buttonRequestRide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="184dp"
+        android:layout_marginTop="81dp"
         android:text="Requestion A Ride"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintHorizontal_bias="0.502" />
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintTop_toBottomOf="@+id/uc_carpooling" />
 
     <Button
         android:id="@+id/offer_a_ride"
-        android:layout_width="155dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Offer A Ride"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonRequestRide"
         tools:layout_constraintTop_creator="1"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.501"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonProfile" />
+        app:layout_constraintBottom_toTopOf="@+id/buttonProfile"
+        app:layout_constraintVertical_bias="0.538" />
 
 
     <TextView
@@ -42,27 +43,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="86dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="94dp"
         android:text="UC Carpooling"
         android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteY="72dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="87dp" />
 
     <Button
         android:id="@+id/buttonProfile"
-        android:layout_width="157dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Profile"
-        tools:layout_editor_absoluteY="332dp"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="103dp"
+        app:layout_constraintTop_toBottomOf="@+id/buttonRequestRide"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintVertical_bias="0.019" />
 
 
 </android.support.constraint.ConstraintLayout>

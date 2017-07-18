@@ -14,8 +14,9 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        Button profileButton = (Button) findViewById(R.id.buttonProfile);
-        Button rideRequestButton = (Button) findViewById(R.id.buttonRequestRide);
+        Button profileButton = (Button) findViewById(R.id.buttonProfile); //Button for Profile
+        Button rideRequestButton = (Button) findViewById(R.id.buttonRequestRide); //Button for requesting a ride
+        Button offerRideButton = (Button) findViewById(R. id.offer_a_ride); //Button for
 
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,6 +34,8 @@ public class MainMenuActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
     }
 
