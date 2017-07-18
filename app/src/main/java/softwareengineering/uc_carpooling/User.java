@@ -1,5 +1,6 @@
 package softwareengineering.uc_carpooling;
 
+import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 /**
@@ -12,6 +13,9 @@ public class User {
     public String email;
     public String name;
 
+    private Marker marker;
+
+
     public User() {
 
     }
@@ -22,7 +26,4 @@ public class User {
 
     }
 
-    public void addMarker() {
-
-    }
 }

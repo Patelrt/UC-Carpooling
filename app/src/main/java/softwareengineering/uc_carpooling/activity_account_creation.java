@@ -130,6 +130,8 @@ public class activity_account_creation extends AppCompatActivity {
                             sendVerificationEmail(user); // sends an email to a new user to verify their email address
                             User appUser = new User(user.getEmail(), inputName.getText().toString());
                             mDatabase.child("users").child(user.getUid()).setValue(appUser);
+                            mDatabase.child("users").child(user.getUid()).child("Location").child("Latitude").setValue(0f);
+                            mDatabase.child("users").child(user.getUid()).child("Location").child("Longitude").setValue(0f);
                             Intent intent = LoginActivity.createIntent(activity_account_creation.this);
                             startActivity(intent);
                         } else {
