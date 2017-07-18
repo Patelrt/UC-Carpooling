@@ -41,7 +41,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        LocationListener{
+        LocationListener, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private LocationRequest locationRequest;
@@ -105,6 +105,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setInterval(10 * 1000)
                 .setFastestInterval(1000);
 
+        mMap.setOnInfoWindowClickListener(this);
+
         displayMarkers();
 
 
@@ -149,7 +151,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng newLocation = new LatLng(latitude, longitude);
                 MarkerOptions newMarker = new MarkerOptions().position(newLocation).snippet(userSnippet);
                 Marker marker = mMap.addMarker(newMarker);
-                marker.showInfoWindow();
+                onInfoWindowClick(marker);
 
             }
 
@@ -254,6 +256,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        marker.showInfoWindow();
 
     }
 }
