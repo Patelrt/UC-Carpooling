@@ -137,6 +137,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    private void handleOfferLocation(Location location) {
+        Log.d("Offer Location", location.toString());
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+
+        LatLng rideOfferLocation = new LatLng(latitude, longitude);
+
+        MarkerOptions markerOp = new MarkerOptions().position(rideOfferLocation).title("Ride Offer Marker").
+                snippet("Date: " + OfferRide.date +  "  " +
+                        "  Destination: " + OfferRide.destination);
+
+        Marker marker = mMap.addMarker(markerOp);
+        marker.showInfoWindow();
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(rideOfferLocation));
+        mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+
+        mDatabase.child(user.getUid()).child("Location").child("Latitude").setValue(markerOp.getPosition().latitude);
+        mDatabase.child(user.getUid()).child("Location").child("Longitude").setValue(markerOp.getPosition().longitude);
+
+    }
+
     private void displayMarkers() {
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override

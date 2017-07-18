@@ -35,6 +35,14 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
+        offerRideButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View V){
+                Intent intent = OfferRide.createIntent(MainMenuActivity.this);
+                startActivity(intent);
+            }
+        });
+
 
 
     }
