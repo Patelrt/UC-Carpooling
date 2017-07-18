@@ -30,7 +30,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = MapsActivity.createIntent(MainMenuActivity.this);
+                Intent intent = RequestRide.createIntent(MainMenuActivity.this);
                 startActivity(intent);
             }
         });
