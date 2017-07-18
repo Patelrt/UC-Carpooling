@@ -57,13 +57,13 @@ public class UserProfile extends AppCompatActivity {
         {
             username = fbUser.getDisplayName();
             email = fbUser.getEmail();
-            fullName = fbUser.getDisplayName().toString();
+            fullName = fbUser.getDisplayName();
         }
 
         // Initialize box text to user's information
         ((EditText)findViewById(R.id.showUsernameProfile)).setText(username);
         ((EditText)findViewById(R.id.showEmailProfile)).setText(email);
-        ((EditText)findViewById(R.id.showNameProfile)).setText(fullName);
+        //((EditText)findViewById(R.id.showNameProfile)).setText(fullName);
         //(TextView)findViewById(R.id.input_password).setText(password);
 
 
