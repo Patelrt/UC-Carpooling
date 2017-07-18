@@ -108,11 +108,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         displayMarkers();
 
 
-
-
-
-
-
     }
 
     private void handleNewLocation(Location location) {
@@ -134,6 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mDatabase.child(user.getUid()).child("Location").child("Latitude").setValue(markerOp.getPosition().latitude);
         mDatabase.child(user.getUid()).child("Location").child("Longitude").setValue(markerOp.getPosition().longitude);
+        mDatabase.child(user.getUid()).child("RideRequest").child("Destination").setValue(markerOp.getSnippet());
 
     }
 
@@ -144,12 +140,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 double latitude = 0f;
                 double longitude = 0f;
+                String userSnippet = "";
 
                 latitude = dataSnapshot.child("Location").child("Latitude").getValue(Double.class);
                 longitude =  dataSnapshot.child("Location").child("Longitude").getValue(Double.class);
+                userSnippet = dataSnapshot.child("RideRequest").child("Destination").getValue(String.class);
 
                 LatLng newLocation = new LatLng(latitude, longitude);
-                MarkerOptions newMarker = new MarkerOptions().position(newLocation);
+                MarkerOptions newMarker = new MarkerOptions().position(newLocation).snippet(userSnippet);
                 mMap.addMarker(newMarker);
             }
 
