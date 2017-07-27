@@ -52,12 +52,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -69,14 +67,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addOnConnectionFailedListener(this)
                 .build();
 
-
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
-
-
-
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-
 
     }
 
@@ -100,7 +92,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-        // Create the LocationRequest object
         locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)
@@ -110,17 +101,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         displayMarkers();
 
-
-
-
     }
 
     private void handleNewLocation(Location location) {
-        Log.d("New Location", location.toString());
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-
-
 
         LatLng rideRequestLocation = new LatLng(latitude, longitude);
 
@@ -137,30 +122,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mDatabase.child(user.getUid()).child("Location").child("Latitude").setValue(markerOp.getPosition().latitude);
         mDatabase.child(user.getUid()).child("Location").child("Longitude").setValue(markerOp.getPosition().longitude);
         mDatabase.child(user.getUid()).child("RideRequest").child("Destination").setValue(markerOp.getSnippet());
-
     }
 
-    private void handleOfferLocation(Location location) {
-        Log.d("Offer Location", location.toString());
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-
-        LatLng rideOfferLocation = new LatLng(latitude, longitude);
-
-        MarkerOptions markerOp = new MarkerOptions().position(rideOfferLocation).title("Ride Offer Marker").
-                snippet("Date: " + OfferRide.date +  "  " +
-                        "  Destination: " + OfferRide.destination);
-
-        Marker marker = mMap.addMarker(markerOp);
-        marker.showInfoWindow();
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(rideOfferLocation));
-        mMap.animateCamera(CameraUpdateFactory.zoomIn());
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
-
-        mDatabase.child(user.getUid()).child("Location").child("Latitude").setValue(markerOp.getPosition().latitude);
-        mDatabase.child(user.getUid()).child("Location").child("Longitude").setValue(markerOp.getPosition().longitude);
-
-    }
 
     private void displayMarkers() {
         mDatabase.addChildEventListener(new ChildEventListener() {
@@ -213,12 +176,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
-            // Show rationale and request permission.
+            // request permission.
         }
         Location location = LocationServices.FusedLocationApi.getLastLocation(client);
         if (location == null) {
@@ -229,11 +191,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if (!OfferRide.offeredRide) {
                 handleNewLocation(location);
-            }
-
-
-
-        }
+            }}
 
     }
 
@@ -246,7 +204,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         if (connectionResult.hasResolution()) {
             try {
-                // Start an Activity that tries to resolve the error
                 connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
             } catch (IntentSender.SendIntentException e) {
                 e.printStackTrace();
