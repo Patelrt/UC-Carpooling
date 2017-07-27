@@ -103,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void handleNewLocation(Location location) {
+    private void handleNewRideLocation(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
 
@@ -190,7 +190,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         else {
 
             if (!OfferRide.offeredRide) {
-                handleNewLocation(location);
+                handleNewRideLocation(location);
             }}
 
     }
@@ -234,7 +234,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-        handleNewLocation(location);
+        handleNewRideLocation(location);
     }
 
     @Override
