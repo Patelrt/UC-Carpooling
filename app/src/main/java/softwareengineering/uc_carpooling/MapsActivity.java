@@ -51,6 +51,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseUser user;
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private final static int INTERVAL = 10000;
+    private final static int FASTEST_INTERVAL = 1000;
+    private final static int ANIMATION_DURATION = 2000;
+    private final static int ZOOM_LEVEL = 15;
+
+    private final static String TAG = "Connection Failed";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +101,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * 1000)
-                .setFastestInterval(1000);
+                .setInterval(INTERVAL)
+                .setFastestInterval(FASTEST_INTERVAL);
 
         mMap.setOnInfoWindowClickListener(this);
 
@@ -118,7 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         marker.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(rideRequestLocation));
         mMap.animateCamera(CameraUpdateFactory.zoomIn());
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL), ANIMATION_DURATION, null);
 
         mDatabase.child(user.getUid()).child("Location").child("Latitude").setValue(markerOp.getPosition().latitude);
         mDatabase.child(user.getUid()).child("Location").child("Longitude").setValue(markerOp.getPosition().longitude);
@@ -210,7 +216,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 e.printStackTrace();
             }
         } else {
-            Log.i("Connection Failed", "Location services connection failed with code " + connectionResult.getErrorCode());
+            Log.i(TAG, "Failed to connect " + connectionResult.getErrorCode());
         }
     }
 
@@ -225,11 +231,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-        if (client.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(client,
-                    (com.google.android.gms.location.LocationListener) this);
-            client.disconnect();
-        }
+        LocationServices.FusedLocationApi.removeLocationUpdates(client,
+                (com.google.android.gms.location.LocationListener) this);
+        client.disconnect();
+
     }
 
 
