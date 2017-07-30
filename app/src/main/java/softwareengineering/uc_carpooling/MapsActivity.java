@@ -40,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener, GoogleMap.OnInfoWindowClickListener {
@@ -95,8 +96,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         locationRequest = LocationRequest.create()
@@ -110,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void handleNewRideLocation(Location location) {
+    private void handleRideLocation(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
 
@@ -177,28 +176,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-
-
-
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
+    private void checkPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
             // request permission.
         }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        checkPermission();
         Location location = LocationServices.FusedLocationApi.getLastLocation(client);
+        if (!OfferRide.offeredRide && location != null) {
+                handleRideLocation(location);
+            }
         if (location == null) {
             LocationServices.FusedLocationApi.requestLocationUpdates(client,
                     locationRequest, (com.google.android.gms.location.LocationListener) this);
         }
-        else {
-
-            if (!OfferRide.offeredRide) {
-                handleNewRideLocation(location);
-            }}
 
     }
 
@@ -240,7 +237,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-        handleNewRideLocation(location);
+        handleRideLocation(location);
+
     }
 
     @Override
