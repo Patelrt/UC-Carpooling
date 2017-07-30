@@ -26,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -39,9 +40,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        LocationListener{
+        LocationListener, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private LocationRequest locationRequest;
@@ -50,7 +52,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseUser user;
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private final static int INTERVAL = 10000;
+    private final static int FASTEST_INTERVAL = 1000;
+    private final static int ANIMATION_DURATION = 2000;
+    private final static int ZOOM_LEVEL = 15;
 
+    private final static String TAG = "Connection Failed";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +75,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addOnConnectionFailedListener(this)
                 .build();
 
-
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
-
-
-
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-
 
     }
 
@@ -95,45 +96,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-        // Create the LocationRequest object
         locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * 1000)
-                .setFastestInterval(1000);
+                .setInterval(INTERVAL)
+                .setFastestInterval(FASTEST_INTERVAL);
+
+        mMap.setOnInfoWindowClickListener(this);
 
         displayMarkers();
 
-
-
-
-
-
-
     }
 
-    private void handleNewLocation(Location location) {
-        Log.d("New Location", location.toString());
+    private void handleRideLocation(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
 
         LatLng rideRequestLocation = new LatLng(latitude, longitude);
 
-        MarkerOptions markerOp = new MarkerOptions().position(rideRequestLocation).title("Ride Request Marker");
-        mMap.addMarker(markerOp);
+        MarkerOptions markerOp = new MarkerOptions().position(rideRequestLocation).title("Ride Request Marker").
+                snippet("Date: " + RequestRide.date +  "  " +
+                          "  Destination: " + RequestRide.destination);
+
+        Marker marker = mMap.addMarker(markerOp);
+        marker.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(rideRequestLocation));
         mMap.animateCamera(CameraUpdateFactory.zoomIn());
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL), ANIMATION_DURATION, null);
 
         mDatabase.child(user.getUid()).child("Location").child("Latitude").setValue(markerOp.getPosition().latitude);
         mDatabase.child(user.getUid()).child("Location").child("Longitude").setValue(markerOp.getPosition().longitude);
-        //mDatabase.setValue(markerOp.getPosition().longitude);
-
-
+        mDatabase.child(user.getUid()).child("RideRequest").child("Destination").setValue(markerOp.getSnippet());
     }
+
 
     private void displayMarkers() {
         mDatabase.addChildEventListener(new ChildEventListener() {
@@ -142,13 +138,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 double latitude = 0f;
                 double longitude = 0f;
+                String userSnippet = "";
 
                 latitude = dataSnapshot.child("Location").child("Latitude").getValue(Double.class);
                 longitude =  dataSnapshot.child("Location").child("Longitude").getValue(Double.class);
+                userSnippet = dataSnapshot.child("RideRequest").child("Destination").getValue(String.class);
 
                 LatLng newLocation = new LatLng(latitude, longitude);
-                MarkerOptions newMarker = new MarkerOptions().position(newLocation);
-                mMap.addMarker(newMarker);
+                MarkerOptions newMarker = new MarkerOptions().position(newLocation).title("Ride Request Marker")
+                .snippet(userSnippet)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                Marker marker = mMap.addMarker(newMarker);
+
+                onInfoWindowClick(marker);
+
             }
 
             @Override
@@ -173,26 +176,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-
-
-
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
+    private void checkPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
-            // Show rationale and request permission.
+            // request permission.
         }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        checkPermission();
         Location location = LocationServices.FusedLocationApi.getLastLocation(client);
+        if (!OfferRide.offeredRide && location != null) {
+                handleRideLocation(location);
+            }
         if (location == null) {
             LocationServices.FusedLocationApi.requestLocationUpdates(client,
                     locationRequest, (com.google.android.gms.location.LocationListener) this);
-        }
-        else {
-            handleNewLocation(location);
         }
 
     }
@@ -206,13 +208,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         if (connectionResult.hasResolution()) {
             try {
-                // Start an Activity that tries to resolve the error
                 connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
             } catch (IntentSender.SendIntentException e) {
                 e.printStackTrace();
             }
         } else {
-            Log.i("Connection Failed", "Location services connection failed with code " + connectionResult.getErrorCode());
+            Log.i(TAG, "Failed to connect " + connectionResult.getErrorCode());
         }
     }
 
@@ -227,17 +228,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-        if (client.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(client,
-                    (com.google.android.gms.location.LocationListener) this);
-            client.disconnect();
-        }
+        LocationServices.FusedLocationApi.removeLocationUpdates(client,
+                (com.google.android.gms.location.LocationListener) this);
+        client.disconnect();
+
     }
 
 
     @Override
     public void onLocationChanged(Location location) {
-        handleNewLocation(location);
+        handleRideLocation(location);
+
     }
 
     @Override
@@ -252,6 +253,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        marker.showInfoWindow();
 
     }
 }

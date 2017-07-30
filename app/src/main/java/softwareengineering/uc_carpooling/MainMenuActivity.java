@@ -30,7 +30,15 @@ public class MainMenuActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = MapsActivity.createIntent(MainMenuActivity.this);
+                Intent intent = RequestRide.createIntent(MainMenuActivity.this);
+                startActivity(intent);
+            }
+        });
+
+        offerRideButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View V){
+                Intent intent = OfferRide.createIntent(MainMenuActivity.this);
                 startActivity(intent);
             }
         });

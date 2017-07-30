@@ -1,49 +1,45 @@
 package softwareengineering.uc_carpooling;
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Button;
 
-public class RequestRide extends AppCompatActivity {
+public class OfferRide extends AppCompatActivity {
 
     private EditText inputDate;
     private EditText inputDestination;
 
     public static String date;
     public static String destination;
+    public static boolean offeredRide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request_ride);
+        setContentView(R.layout.activity_offer_ride);
 
         inputDate = (EditText) findViewById(R.id.enterDate);
         inputDestination = (EditText) findViewById(R.id.enterAddress);
 
         Button requestButton = (Button) findViewById(R.id.buttonEnterRequest);
 
-
-        requestButton.setOnClickListener(new View.OnClickListener() {
+        requestButton.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
+            public void onClick (View v) {
                 date = inputDate.getText().toString();
                 destination = inputDestination.getText().toString();
-                OfferRide.offeredRide = false;
-                Intent intent = MapsActivity.createIntent(RequestRide.this);
+                Intent intent = MapsActivity.createIntent(OfferRide.this);
+                offeredRide = true;
                 startActivity(intent);
             }
         });
     }
 
     public static Intent createIntent(Context context) {
-        return new Intent(context, RequestRide.class);
+        return new Intent(context, OfferRide.class);
     }
-
-
-
-
 }

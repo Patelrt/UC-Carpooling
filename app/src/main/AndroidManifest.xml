@@ -50,7 +50,8 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".RequestRide"></activity>
+        <activity android:name=".RequestRide" />
+        <activity android:name=".OfferRide"></activity>
     </application>
 
 </manifest>
