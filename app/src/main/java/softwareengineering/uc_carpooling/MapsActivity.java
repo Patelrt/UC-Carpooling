@@ -51,8 +51,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DatabaseReference mDatabase;
     private FirebaseUser user;
 
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private final static int INTERVAL = 10000;
+    private final static int RESOLVE_ERROR_REQUEST = 1001;
+    private final static int INTERVAL_LOCATION_UPDATES = 10000;
     private final static int FASTEST_INTERVAL = 1000;
     private final static int ANIMATION_DURATION = 2000;
     private final static int ZOOM_LEVEL = 15;
@@ -100,7 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(INTERVAL)
+                .setInterval(INTERVAL_LOCATION_UPDATES)
                 .setFastestInterval(FASTEST_INTERVAL);
 
         mMap.setOnInfoWindowClickListener(this);
@@ -196,7 +196,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LocationServices.FusedLocationApi.requestLocationUpdates(client,
                     locationRequest, (com.google.android.gms.location.LocationListener) this);
         }
-
     }
 
     @Override
@@ -208,7 +207,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         if (connectionResult.hasResolution()) {
             try {
-                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                connectionResult.startResolutionForResult(this, RESOLVE_ERROR_REQUEST);
             } catch (IntentSender.SendIntentException e) {
                 e.printStackTrace();
             }
@@ -228,8 +227,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-        LocationServices.FusedLocationApi.removeLocationUpdates(client,
-                (com.google.android.gms.location.LocationListener) this);
+        if (client.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(client,
+                    (com.google.android.gms.location.LocationListener) this);
+        }
         client.disconnect();
 
     }
